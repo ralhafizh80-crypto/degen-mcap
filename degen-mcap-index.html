@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b10">
+<title>Degen MCAP</title>
+<style>
+:root{--bg:#080b10;--card:#121925;--line:#293448;--text:#f4f7ff;--muted:#8d9ab0;--green:#b9ff58}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top right,#252047,transparent 45%),var(--bg);color:var(--text);font-family:system-ui,Arial,sans-serif}
+main{max-width:950px;margin:auto;padding:20px 14px 40px}
+header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:10px 0 20px}
+.logo{font-weight:900;font-size:23px}.logo span,h1 span{color:var(--green)}
+.hero{text-align:center;padding:35px 0 25px}
+.hero small{color:var(--green);letter-spacing:2px}
+h1{font-size:clamp(35px,8vw,55px);line-height:1.05;margin:12px 0}
+p{color:var(--muted);font-size:13px;line-height:1.6}
+nav{display:flex;gap:7px;overflow:auto;margin-bottom:15px}
+button{cursor:pointer;border:1px solid var(--line);border-radius:9px;background:#1b2432;color:var(--text);padding:10px 12px;font-weight:700;font-size:12px}
+button.active,.primary{background:var(--green);color:#10150a;border-color:var(--green)}
+.tab{white-space:nowrap}
+.panel{display:none}.panel.active{display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:14px;min-width:0}
+h2{font-size:16px;margin:0 0 7px}
+label{display:block;color:var(--muted);font-size:11px;margin:14px 0 6px}
+input{width:100%;background:#090e16;color:white;border:1px solid #344056;border-radius:9px;padding:12px;font-size:14px}
+.big{font-size:clamp(28px,6vw,40px);color:var(--green);font-weight:900;overflow-wrap:anywhere;margin:12px 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+.stat{background:#0a1018;padding:12px;border:1px solid var(--line);border-radius:9px}
+.stat small{display:block;color:var(--muted);margin-bottom:7px}.stat b{overflow-wrap:anywhere}
+.full{width:100%;margin-top:12px}
+.quick{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.quick button{padding:6px 8px;font-size:10px}
+.status{font-size:12px;color:var(--muted);margin:12px 0;overflow-wrap:anywhere}
+.token{border:1px solid var(--line);background:#0a1018;border-radius:10px;padding:12px;margin-top:9px;overflow-wrap:anywhere}
+.token b{color:var(--green)}.token small{display:block;color:var(--muted);margin:6px 0}
+.token button{margin:3px 3px 0 0;padding:7px}
+a{color:var(--green)}footer{text-align:center;font-size:11px;color:var(--muted);margin-top:24px}
+@media(max-width:620px){.grid{grid-template-columns:1fr}.card{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="logo">Ð DEGEN<span>MCAP</span></div>
+<div style="color:var(--green);font-size:10px">SOLANA TOOLS</div>
+</header>
+
+<section class="hero">
+<small>MEME COIN COMMUNITY</small>
+<h1>Calculate the bag.<br><span>Check the market.</span></h1>
+<p>MCAP calculator, Solana token lookup, trending feed and watchlist.</p>
+</section>
+
+<nav>
+<button class="tab active" data-tab="calc">MCAP Calculator</button>
+<button class="tab" data-tab="lookup">Token Lookup</button>
+<button class="tab" data-tab="trending">Trending</button>
+<button class="tab" data-tab="watch">Watchlist ☆</button>
+</nav>
+
+<section id="calc" class="panel active">
+<div class="grid">
+<div class="card">
+<h2>Position details</h2>
+<p>Enter your investment and market cap targets.</p>
+<label>Investment (USD)</label>
+<input id="investment" type="number" value="100" min="0">
+<label>Entry MCAP (USD)</label>
+<input id="entry" type="number" value="100000" min="0">
+<div class="quick">
+<button data-field="entry" data-value="10000">$10K</button>
+<button data-field="entry" data-value="50000">$50K</button>
+<button data-field="entry" data-value="1000000">$1M</button>
+</div>
+<label>Target MCAP (USD)</label>
+<input id="target" type="number" value="1000000" min="0">
+<div class="quick">
+<button data-field="target" data-value="500000">$500K</button>
+<button data-field="target" data-value="10000000">$10M</button>
+<button data-field="target" data-value="100000000">$100M</button>
+</div>
+<button class="primary full" id="share">Share result on X ↗</button>
+</div>
+
+<div class="card">
+<h2>Estimated outcome</h2>
+<p>Scenario calculator — not a prediction.</p>
+<div class="big" id="value">$1,000.00</div>
+<div id="multiple">10x return</div>
+<div class="stats">
+<div class="stat"><small>Estimated profit</small><b id="profit">$900</b></div>
+<div class="stat"><small>ROI</small><b id="roi">900%</b></div>
+<div class="stat"><small>MCAP multiple</small><b id="move">10x</b></div>
+<div class="stat"><small>Target MCAP</small><b id="targetLabel">$1M</b></div>
+</div>
+<p>Assumes token value moves proportionally with MCAP and supply stays constant. Excludes fees, slippage and taxes.</p>
+</div>
+</div>
+</section>
+
+<section id="lookup" class="panel">
+<div class="card">
+<h2>Solana Token Lookup</h2>
+<p>Paste a token mint address to find indexed trading pairs on DEX Screener.</p>
+<input id="address" placeholder="Paste Solana token address" autocomplete="off">
+<button class="primary full" id="search">Search token</button>
+<div id="lookupStatus" class="status"></div>
+<div id="lookupResults"></div>
+</div>
+</section>
+
+<section id="trending" class="panel">
+<div class="card">
+<h2>Trending / Latest Boosts</h2>
+<p>Recently boosted tokens. Paid promotion does not mean a token is safe.</p>
+<button class="primary" id="loadTrending">Load Solana tokens</button>
+<div id="trendStatus" class="status">Press Load to fetch data.</div>
+<div id="trendResults"></div>
+</div>
+</section>
+
+<section id="watch" class="panel">
+<div class="card">
+<h2>Your Watchlist ☆</h2>
+<p>Saved in this browser on this device.</p>
+<div id="watchResults"></div>
+</div>
+</section>
+
+<footer>
+Data: <a href="https://dexscreener.com" target="_blank" rel="noopener">DEX Screener</a><br>
+DYOR · Not financial advice
+</footer>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const API='https://api.dexscreener.com';
+let watch=[];
+let lastToken=null;
+let trendTokens=[];
+
+try{
+watch=JSON.parse(localStorage.getItem('degen-watch')||'[]');
+}catch(e){watch=[]}
+
+function money(n){
+return Number.isFinite(n)?n.toLocaleString('en-US',{
+style:'currency',currency:'USD',maximumFractionDigits:2
+}):'N/A';
+}
+
+function compact(n){
+n=Number(n);
+if(!Number.isFinite(n))return 'N/A';
+if(n>=1e9)return '$'+(n/1e9).toFixed(2)+'B';
+if(n>=1e6)return '$'+(n/1e6).toFixed(2)+'M';
+if(n>=1e3)return '$'+(n/1e3).toFixed(2)+'K';
+return '$'+n.toFixed(2);
+}
+
+function esc(s){
+return String(s??'').replace(/[&<>"']/g,c=>({
+'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+}
+
+function calc(){
+const inv=Number($('investment').value);
+const entry=Number($('entry').value);
+const target=Number($('target').value);
+
+if(![inv,entry,target].every(Number.isFinite)||inv<0||entry<=0||target<0){
+$('value').textContent='Check inputs';
+return;
+}
+
+const mult=target/entry;
+const val=inv*mult;
+const profit=val-inv;
+const roi=inv?profit/inv*100:0;
+
+$('value').textContent=money(val);
+$('profit').textContent=money(profit);
+$('roi').textContent=roi.toFixed(2)+'%';
+$('multiple').textContent=mult.toFixed(2)+'x return';
+$('move').textContent=mult.toFixed(2)+'x';
+$('targetLabel').textContent=compact(target);
+}
+
+document.querySelectorAll('.tab').forEach(b=>{
+b.onclick=()=>{
+document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));
+document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab));
+if(b.dataset.tab==='watch')renderWatch();
+};
+});
+
+['investment','entry','target'].forEach(id=>{
+$(id).addEventListener('input',calc);
+});
+
+document.querySelectorAll('[data-field]').forEach(b=>{
+b.onclick=()=>{
+$(b.dataset.field).value=b.dataset.value;
+calc();
+};
+});
+
+$('share').onclick=()=>{
+const text='My MCAP scenario 🧮\nEntry: '+compact(+$('entry').value)+
+'\nTarget: '+compact(+$('target').value)+
+'\nInvestment: '+money(+$('investment').value)+
+'\nEstimated value: '+$('value').textContent+
+'\nScenario only. DYOR.';
+window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text),'_blank');
+};
+
+async function getJSON(url){
+const r=await fetch(url);
+if(!r.ok)throw Error('API error '+r.status+'. Wait and retry.');
+return r.json();
+}
+
+async function tokenInfo(address){
+const pairs=await getJSON(API+'/token-pairs/v1/solana/'+encodeURIComponent(address));
+if(!Array.isArray(pairs)||!pairs.length){
+throw Error('No indexed pairs found. Check the token address.');
+}
+pairs.sort((a,b)=>(b.liquidity?.usd||0)-(a.liquidity?.usd||0));
+const p=pairs[0];
+const t=p.baseToken||{};
+return{
+address:t.address||address,
+name:t.name||'Unknown',
+symbol:t.symbol||'?',
+price:p.priceUsd,
+mc:p.marketCap??p.fdv,
+liq:p.liquidity?.usd,
+vol:p.volume?.h24,
+change:p.priceChange?.h24,
+url:p.url
+};
+}
+
+function card(t){
+const saved=watch.some(x=>x.address===t.address);
+return `<div class="token">
+<b>${esc(t.name)} ($${esc(t.symbol)})</b>
+<small>MCAP ${compact(t.mc)} · Liquidity ${compact(t.liq)}<br>
+Price ${t.price?'$'+t.price:'N/A'} · Volume 24h ${compact(t.vol)} · Change ${t.change??'N/A'}%</small>
+<small>Address: ${esc(t.address)}</small>
+<button data-watch="${esc(t.address)}">${saved?'★ Saved':'☆ Watch'}</button>
+<button data-copy="${esc(t.address)}">Copy address</button>
+${t.url?`<a href="${esc(t.url)}" target="_blank" rel="noopener">DEX Screener ↗</a>`:''}
+</div>`;
+}
+
+function renderWatch(){
+$('watchResults').innerHTML=watch.length?
+watch.map(card).join(''):
+'<p>Your watchlist is empty. Search a token and press Watch.</p>';
+}
+
+function renderLookup(t){
+$('lookupResults').innerHTML=card(t);
+}
+
+$('search').onclick=async()=>{
+const address=$('address').value.trim();
+if(!address){
+$('lookupStatus').textContent='Paste a token address first.';
+return;
+}
+$('lookupStatus').textContent='Loading token data…';
+$('lookupResults').innerHTML='';
+try{
+lastToken=await tokenInfo(address);
+renderLookup(lastToken);
+$('lookupStatus').textContent='Data loaded. Verify the token before interacting.';
+}catch(e){
+$('lookupStatus').textContent=e.message;
+}
+};
+
+$('address').addEventListener('keydown',e=>{
+if(e.key==='Enter')$('search').click();
+});
+
+$('loadTrending').onclick=async()=>{
+$('trendStatus').textContent='Loading latest boosts…';
+$('trendResults').innerHTML='';
+try{
+const data=await getJSON(API+'/token-boosts/latest/v1');
+const entries=[...new Map(
+(Array.isArray(data)?data:[])
+.filter(x=>x.chainId==='solana'&&x.tokenAddress)
+.map(x=>[x.tokenAddress,x])
+).values()].slice(0,8);
+
+const results=await Promise.allSettled(
+entries.map(x=>tokenInfo(x.tokenAddress))
+);
+
+trendTokens=results
+.filter(x=>x.status==='fulfilled')
+.map(x=>x.value);
+
+$('trendResults').innerHTML=trendTokens.length?
+trendTokens.map(card).join(''):
+'<p>No indexed Solana tokens returned. Try again later.</p>';
+
+$('trendStatus').textContent=
+'Loaded '+trendTokens.length+' tokens. Boosts are not safety checks.';
+}catch(e){
+$('trendStatus').textContent=e.message;
+}
+};
+
+document.addEventListener('click',async e=>{
+const b=e.target.closest('button');
+if(!b)return;
+
+if(b.dataset.watch){
+const address=b.dataset.watch;
+const i=watch.findIndex(x=>x.address===address);
+
+if(i>=0){
+watch.splice(i,1);
+}else{
+let t=[lastToken,...trendTokens].find(x=>x&&x.address===address);
+if(!t){
+try{t=await tokenInfo(address);}
+catch(err){alert(err.message);return;}
+}
+watch.unshift(t);
+}
+
+try{
+localStorage.setItem('degen-watch',JSON.stringify(watch));
+}catch(err){}
+
+renderWatch();
+if(lastToken)$('lookupResults').innerHTML=card(lastToken);
+if(trendTokens.length)$('trendResults').innerHTML=trendTokens.map(card).join('');
+}
+
+if(b.dataset.copy){
+try{
+await navigator.clipboard.writeText(b.dataset.copy);
+b.textContent='Copied!';
+}catch(err){
+prompt('Copy token address:',b.dataset.copy);
+}
+}
+});
+
+calc();
+renderWatch();
+</script>
+</body>
+</html>
